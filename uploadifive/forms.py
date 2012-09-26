@@ -32,7 +32,6 @@ def create_clean_nonce(name, suffix, wrapped):
         try:
             setattr(self, "%s_nonce_instance" % name,
                 Nonce.objects.lookup(value))
-            print "NONCE: %s" % getattr(self, "%s_nonce_instance" % name)
         except NonceException, e:
             raise forms.ValidationError(e.message)
         return value
@@ -42,13 +41,11 @@ def create_clean_nonce(name, suffix, wrapped):
 
 def create_clean_ref(name, suffix, wrapped):
     def inner_clean(self, value):
-        print "clean_ref"
         nonce_instance = getattr(self, "%s_nonce_instance" % name, None)
         if nonce_instance:
             upload = list(nonce_instance.upload_set.filter(pk=value)[:1])
             upload = upload[0] if upload else None
             setattr(self, "%s_upload" % name, upload)
-            print "UPLOAD: %s" % upload
         return value
 
     return wrap_function(name, suffix, wrapped, inner_clean)
@@ -60,7 +57,6 @@ def add_function(self, name, suffix, generator):
     fn = generator(name, suffix, wrapped)
     method = types.MethodType(fn, self, type(self))
     setattr(self, method_name, method)
-    print "Added %s" % method_name
 
 
 class NoncedMixin(object):
