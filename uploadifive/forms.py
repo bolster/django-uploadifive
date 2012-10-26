@@ -68,11 +68,12 @@ class NoncedMixin(object):
 
     def __init__(self, *args, **kwargs):
         initial = kwargs.setdefault('initial', {})
+        user = self.user
 
         nonce_initial = {}
         for name in self.NONCED_FIELDS:
             nonce_name = "%s_nonce" % name
-            nonce_initial[nonce_name] = Nonce.objects.provision(user=instance)
+            nonce_initial[nonce_name] = Nonce.objects.provision(user=user)
 
             add_function(self, name, "nonce", create_clean_nonce)
             add_function(self, name, "ref", create_clean_ref)
