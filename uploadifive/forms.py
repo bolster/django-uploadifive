@@ -68,7 +68,6 @@ class NoncedMixin(object):
 
     def __init__(self, *args, **kwargs):
         initial = kwargs.setdefault('initial', {})
-        instance = self.instance
 
         nonce_initial = {}
         for name in self.NONCED_FIELDS:
