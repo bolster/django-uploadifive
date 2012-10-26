@@ -43,8 +43,12 @@ def create_clean_ref(name, suffix, wrapped):
     def inner_clean(self, value):
         nonce_instance = getattr(self, "%s_nonce_instance" % name, None)
         if nonce_instance:
-            upload = list(nonce_instance.upload_set.filter(pk=value)[:1])
-            upload = upload[0] if upload else None
+            upload = None
+            try:
+                upload = list(nonce_instance.upload_set.filter(pk=int(value))[:1])
+                upload = upload[0] if upload else None
+            except ValueError:
+                pass
             setattr(self, "%s_upload" % name, upload)
         return value
 
