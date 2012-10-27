@@ -67,7 +67,7 @@ class NoncedMixin(object):
     NONCED_FIELDS = []
 
     def __init__(self, *args, **kwargs):
-        initial = kwargs.setdefault('initial', {})
+        initial = kwargs['initial'] if kwargs.get('initial', None) else {}
         user = self.user
 
         nonce_initial = {}
@@ -79,6 +79,8 @@ class NoncedMixin(object):
             add_function(self, name, "ref", create_clean_ref)
 
         initial.update(nonce_initial)
+
+        kwargs['initial'] = initial
 
         super(NoncedMixin, self).__init__(*args, **kwargs)
 
